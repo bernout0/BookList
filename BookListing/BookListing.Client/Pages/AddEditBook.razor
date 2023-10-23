@@ -1,0 +1,153 @@
+﻿@using BookListing.Client.Services;
+@using BookListing.Client.Services.Interfaces;
+@using BookListing.Domain.Entities;
+@inject CategoryService _categoryService
+@inject DepartmentService _departmentService
+@inject BookService _bookService
+
+<EditForm Model="Book" OnValidSubmit="Save">
+    <label>Title</label>
+    <div class="mb-3">
+        <InputText class="form-control" @bind-Value="Book.Title" />
+    </div>
+    <label>Author</label>
+    <div class="mb-3">
+        <InputText class="form-control" type="text" @bind-Value="Book.Author" />
+    </div>
+    <label>Description</label>
+    <div class="mb-3">
+        <InputText class="form-control" type="text" @bind-Value="Book.Description" />
+    </div>
+    <label>Category</label>
+    <div class="mb-3">
+        <select class="form-select" @onchange="SelectCategory" aria-label="Category select">
+            <option value="@Book.Category?.Id" selected>@Book.Category?.Name</option>
+            @if(_categories != null){
+            @foreach (var cat in _categories)
+            {
+
+                if (cat.Id != Book.Category?.Id)
+                {
+                    <option value="@cat.Id">@cat.Name</option>
+
+                }
+               
+            }
+            }
+
+        </select>
+
+    </div>
+    <label>Department</label>
+    <div class="mb-3">
+        <select class="form-select" @onchange="SelectDepartment" aria-label="Category select">
+            <option value="@Book.Department?.Id" selected>@Book.Department?.Name</option>
+            @if (_departments != null)
+                {
+            @foreach (var dept in _departments)
+            {
+                if (dept.Id != Book.Department?.Id)
+                {
+                    <option value="@dept.Id">@dept.Name</option>
+                }              
+            }
+                }
+        </select>
+
+    </div>
+
+
+
+    <span style="color:red">@validationMessage</span>
+
+    <div class="text-center">
+        <button type="submit" class="btn bg-gradient-info w-100 mt-4 mb-0">Save</button>
+    </div>
+    <div class="text-center">
+        <button @onclick="DeleteBook" class="btn bg-gradient-warning w-100 mt-4 mb-0">Delete</button>
+    </div>
+</EditForm>
+
+
+@code {
+    //Event after saving a book
+    [Parameter] public EventCallback<bool> OnSaveCompleted { get; set; }
+
+    public Book Book { get; set; } = new Book();
+    public bool IsAdd { get; set; } = true;
+    string validationMessage = string.Empty;
+
+
+    public void OpenModal(Book book)
+    {
+        Book = book;
+
+        //Trigger states to refresh
+        _categories = _categories;
+        _departments = _departments;
+
+        StateHasChanged(); // Force re-render to show the modal
+    }
+
+
+    private async Task Save()
+    {
+        if (Book.CategoryId == null)
+            Book.CategoryId = Book.Category?.Id ;
+
+        if (Book.DepartmentId == null)
+            Book.DepartmentId = Book.Department?.Id;
+
+        if (IsAdd)
+        {
+            var createdBook = await _bookService.AddBook(Book);
+            if (createdBook != null)
+                await OnSaveCompleted.InvokeAsync(true);
+        }
+        else
+        {
+            await _bookService.UpdateBook(Book);  
+            await OnSaveCompleted.InvokeAsync(true);
+
+        }
+
+    }
+
+    private async Task DeleteBook()
+    {
+        await _bookService.DeleteBook(Book);
+        await OnSaveCompleted.InvokeAsync(true);
+
+    }
+
+    private void SelectCategory(ChangeEventArgs e)
+    {
+        string categoryId = e.Value?.ToString();
+
+        Book.CategoryId = new Guid(categoryId);
+    }
+
+    private void SelectDepartment(ChangeEventArgs e)
+    {
+        string id = e.Value?.ToString();
+
+        Book.DepartmentId = new Guid(id);
+    }
+
+
+    List<Category> _categories = new List<Category>();
+    List<Department> _departments = new List<Department>();
+
+    private bool _isFirstRender = true;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _categories = await _categoryService.GetCategories();
+            _departments = await _departmentService.GetDepartments();
+            _isFirstRender = false;
+            StateHasChanged(); // This will request a re-render after data has been fetched.
+        }
+    }
+}

@@ -1,0 +1,144 @@
+﻿@using BookListing.Client.Services;
+@using BookListing.Domain.Entities;
+@inject UserService _userService
+@inject CategoryService _categoryService
+@inject DepartmentService _departmentService
+@inject UserAccessService _userAccessService
+
+@if(!string.IsNullOrEmpty(User.UserName)){
+    <label>Username</label>
+    <div class="mb-3">
+        <input type="email" class="form-control" value="@User.UserName" readonly>
+
+    </div>
+    <label>User ID</label>
+    <div class="mb-3">
+        <input type="email" class="form-control" value="@User.Id.ToString()" readonly>
+    </div>
+
+    <label>Categories</label>
+    @foreach (var cat in _categories)
+    {
+        var userAccess = User.UserAccesses.Find(i => i.Category?.Id == cat.Id);
+        if (userAccess != null)
+        {
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="true" id="@cat.Id" checked @onchange="@(e => OnCategoryCheckboxChanged(e, cat.Id, userAccess.Id))">
+                <label class="form-check-label" for="flexCheckDefault">
+                    @cat.Name
+                </label>
+            </div>
+        }
+        else
+        {
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="false" id="@cat.Id" @onchange="@(e => OnCategoryCheckboxChanged(e, cat.Id, null))">
+                <label class="form-check-label" for="flexCheckDefault">
+                    @cat.Name
+                </label>
+            </div>
+        }
+    }
+    <label>Departments</label>
+    @foreach (var dept in _departments)
+    {
+        var userAccess = User.UserAccesses.Find(i => i.Department?.Id == dept.Id);
+
+        if (userAccess != null)
+        {
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="true" id="@dept.Id" checked @onchange="@(e => OnDepartmentCheckboxChanged(e, dept.Id, userAccess.Id))">
+                <label class="form-check-label" for="flexCheckDefault">
+                    @dept.Name
+                </label>
+            </div>
+        }
+        else
+        {
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="false" id="@dept.Id" @onchange="@(e => OnDepartmentCheckboxChanged(e, dept.Id, null))">
+                <label class="form-check-label" for="flexCheckDefault">
+                    @dept.Name
+                </label>
+            </div>
+        }
+    }
+}
+
+
+
+
+@code {
+    //Event after saving a book
+    [Parameter] public EventCallback<bool> OnSaveCompleted { get; set; }
+
+    public UserDTO User { get; set; } = new UserDTO();
+    List<Category> _categories = new List<Category>();
+    List<Department> _departments = new List<Department>();
+    private bool _isFirstRender = true;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _categories = await _categoryService.GetCategories();
+            _departments = await _departmentService.GetDepartments();
+            _isFirstRender = false;
+            StateHasChanged(); // This will request a re-render after data has been fetched.
+        }
+    }
+
+    public void OpenModal(UserDTO user)
+    {
+        User = user;
+        StateHasChanged(); // Force re-render to show the modal
+    }
+
+    private async void OnCategoryCheckboxChanged(ChangeEventArgs e, Guid categoryId, Guid? UserAccessId)
+    {
+        bool isChecked = (bool)e.Value;
+
+        if(!isChecked)//Unchecked so delete the access control
+        {
+            if (UserAccessId.HasValue)
+                await _userAccessService.DeleteUserAccess(UserAccessId.Value);
+        }
+        else
+        {
+            await _userAccessService.CreateUserAccess(new UserAccessRequest()
+            {
+                UserId = User.Id,
+                CategoryId = categoryId
+            });
+
+        }
+
+        StateHasChanged(); // This will request a re-render after data has been fetched.
+
+
+        // Do whatever logic you want based on the checkbox change
+    }
+
+    private async void OnDepartmentCheckboxChanged(ChangeEventArgs e, Guid checkboxId, Guid? UserAccessId)
+    {
+        bool isChecked = (bool)e.Value;
+        // Do whatever logic you want based on the checkbox change
+
+        if (!isChecked)//Unchecked so delete the access control
+        {
+            if (UserAccessId.HasValue)
+                await _userAccessService.DeleteUserAccess(UserAccessId.Value);
+        }
+        else
+        {
+            await _userAccessService.CreateUserAccess(new UserAccessRequest()
+                {
+                    UserId = User.Id,
+                    DepartmentId = checkboxId
+                });
+
+        }
+        StateHasChanged(); // This will request a re-render after data has been fetched.
+
+    }
+}

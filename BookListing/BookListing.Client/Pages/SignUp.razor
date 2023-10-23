@@ -1,0 +1,193 @@
+﻿@using Microsoft.AspNetCore.Components.Web
+@inject IJSRuntime JSRuntime;
+@page "/signup"
+@layout NullLayout
+@using BookListing.Client.Services;
+@inject AuthenticationService _authService
+@inject Microsoft.Extensions.Configuration.IConfiguration config
+@inject NavigationManager NavManager
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>
+        Book List Registration
+    </title>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
+    <link href="~/assets/css/nucleo-icons.css" rel="stylesheet" />
+    <link href="~/assets/css/nucleo-svg.css" rel="stylesheet" />
+    <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+    <link href="~/assets/css/nucleo-svg.css" rel="stylesheet" />
+    <link id="pagestyle" href="../assets/css/soft-ui-dashboard.css?v=1.0.7" rel="stylesheet" />
+
+</head>
+
+<body class="">
+    <div class="container position-sticky z-index-sticky top-0">
+        <div class="row">
+            <div class="col-12">
+                <!-- Navbar -->
+                <nav class="navbar navbar-expand-lg blur blur-rounded top-0 z-index-3 shadow position-absolute my-3 py-2 start-0 end-0 mx-4">
+                    <div class="container-fluid pe-0">
+                        <a class="navbar-brand font-weight-bolder ms-lg-0 ms-3 " href="../pages/dashboard.html">
+                            Book Listing by Bernie
+                        </a>
+                        <button class="navbar-toggler shadow-none ms-2" type="button" data-bs-toggle="collapse" data-bs-target="#navigation" aria-controls="navigation" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon mt-2">
+                                <span class="navbar-toggler-bar bar1"></span>
+                                <span class="navbar-toggler-bar bar2"></span>
+                                <span class="navbar-toggler-bar bar3"></span>
+                            </span>
+                        </button>
+                        <div class="collapse navbar-collapse" id="navigation">
+                            <ul class="navbar-nav mx-auto ms-xl-auto me-xl-7">
+                                <li class="nav-item">
+                                    <a class="nav-link d-flex align-items-center me-2 active" aria-current="page" href="@config["ApiBaseUrl"]" target="_blank">
+                                        <i class="fa fa-chart-pie opacity-6 text-dark me-1"></i>
+                                        API Documentation
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link me-2" href="login">
+                                        <i class="fas fa-user-circle opacity-6 text-dark me-1"></i>
+                                        Sign In
+                                    </a>
+                                </li>
+
+                            </ul>
+
+                        </div>
+                    </div>
+                </nav>
+                <!-- End Navbar -->
+            </div>
+        </div>
+    </div>
+    <main class="main-content  mt-0">
+        <section>
+            <div class="page-header min-vh-75">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-xl-4 col-lg-5 col-md-6 d-flex flex-column mx-auto">
+                            <div class="card card-plain mt-8">
+                                <div class="card-header pb-0 text-left bg-transparent">
+                                    <h3 class="font-weight-bolder text-info text-gradient">Register your account</h3>
+                                    <p class="mb-0">Enter your email and password to register</p>
+                                </div>
+                                <div class="card-body">
+                                    <EditForm Model="loginModel" OnValidSubmit="HandleLogin">
+                                        <label>Email</label>
+                                        <div class="mb-3">
+                                            <InputText class="form-control" @bind-Value="loginModel.Username" placeholder="Username" aria-describedby="email-addon" />
+                                        </div>
+                                        <label>Password</label>
+                                        <div class="mb-3">
+                                            <InputText class="form-control" type="password" @bind-Value="loginModel.Password" aria-label="Password" aria-describedby="password-addon" placeholder="Password" />
+                                        </div>
+                                        <span style="color:red">@validationMessage</span>
+
+                                        <div class="text-center">
+                                            <button type="submit" class="btn bg-gradient-info w-100 mt-4 mb-0">Sign in</button>
+                                        </div>
+                                    </EditForm>
+                                </div>
+
+                                <div class="card-footer text-center pt-0 px-lg-2 px-1">
+                                    <p class="mb-4 text-sm mx-auto">
+                                        Already have an account?
+                                        <a href="login" class="text-info text-gradient font-weight-bold">Sign In</a>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="oblique position-absolute top-0 h-100 d-md-block d-none me-n8">
+                                <div class="oblique-image bg-cover position-absolute fixed-top ms-auto h-100 z-index-0 ms-n6" style="background-image:url('../assets/img/bg.jpg')"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!--   Core JS Files   -->
+    <script src="~/assets/js/core/popper.min.js"></script>
+    <script src="~/assets/js/core/bootstrap.min.js"></script>
+    <script src="~/assets/js/plugins/perfect-scrollbar.min.js"></script>
+    <script src="~/assets/js/plugins/smooth-scrollbar.min.js"></script>
+
+
+    <script src="~/assets/js/soft-ui-dashboard.min.js?v=1.0.7"></script>
+    <script src="_framework/blazor.webassembly.js"></script>
+
+</body>
+
+</html>
+
+@code {
+    private LoginModel loginModel = new LoginModel();
+    private string validationMessage = string.Empty;
+
+    private async Task HandleLogin()
+    {
+        //CLient side validation
+
+        var input = loginModel.Password;
+        // Check minimum length
+        if (input.Length < 6)
+        {
+            validationMessage = "Password should be more than 6 characters.";
+
+            return;
+        }
+
+        // Check alphanumeric
+        if (!input.Any(c => char.IsDigit(c)))
+        {
+            validationMessage = "Password should contain at least 1 digit.";
+
+            return;
+        }
+
+        // Check for at least one special character
+        if (!input.Any(c => !char.IsLetterOrDigit(c) && !char.IsWhiteSpace(c)))
+        {
+            validationMessage = "Password should have at least one special character";
+
+            return;
+        }
+
+        // Check for presence of both uppercase and lowercase
+        if (!input.Any(char.IsUpper) || !input.Any(char.IsLower))
+        {
+            validationMessage = "Password should contain both upper and lower case";
+            return;
+        }
+        
+        var token = await _authService.RegisterAsync(loginModel.Username, loginModel.Password);
+        if (token != null)
+        {
+            // Handle successful login, e.g., navigate to a different page or store the token for future API calls
+            await JSRuntime.InvokeVoidAsync("localStorage.setItem", "authToken", token);
+            validationMessage = "Registration Success";
+            NavManager.NavigateTo("/Books");
+
+
+        }
+        else
+        {
+            validationMessage = "Registration failed. Please try again";
+        }
+    }
+
+    private class LoginModel
+    {
+        public string Username { get; set; } = "";
+        public string Password { get; set; } = "";
+    }
+}

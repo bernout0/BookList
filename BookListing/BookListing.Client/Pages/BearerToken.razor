@@ -1,0 +1,34 @@
+﻿@page "/BearerToken"
+@inject IJSRuntime JSRuntime;
+
+
+<div class="row">
+    <div class="col-12">
+        <div class="card mb-4">
+            <div class="card-header pb-0">
+                <h6>Bearer Token for debugging purposes</h6><br>
+            </div>
+            <div class="card-body ">
+                <div class="form-group">
+                    <textarea disabled class="form-control" id="textArea" rows="3">@bearerToken</textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@code {
+    private bool _isFirstRender = true;
+    string bearerToken = string.Empty;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            bearerToken = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "authToken");
+            _isFirstRender = false;
+            StateHasChanged(); // This will request a re-render after data has been fetched.
+        }
+    }
+}
