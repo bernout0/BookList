@@ -16,7 +16,6 @@ Welcome to Book Listing Project! This repository contains the codebase for a RES
 ## Getting Started
 
 # In App Screenshots
-![image](https://github.com/bernout0/BookList/assets/6838398/d2e8fcd4-58a1-4f1e-9c87-c09dd53282c7)
 
 ![image](https://github.com/bernout0/BookList/assets/6838398/7736ec4b-01fa-4b2c-a505-bad1e9e4f227)
 
@@ -25,6 +24,7 @@ Welcome to Book Listing Project! This repository contains the codebase for a RES
 ![image](https://github.com/bernout0/BookList/assets/6838398/f11f6bcb-5ce9-4c64-849b-a08c430d0281)
 
 ![image](https://github.com/bernout0/BookList/assets/6838398/4d4ce598-4154-43ad-91c2-7cc17d156519)
+![image](https://github.com/bernout0/BookList/assets/6838398/d2e8fcd4-58a1-4f1e-9c87-c09dd53282c7)
 
 ### Prerequisites
 
