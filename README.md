@@ -44,7 +44,7 @@ Welcome to Book Listing Project! This repository contains the codebase for a RES
 1. Clone this repository to your local machine:
 
    ```bash
-   git clone [https://github.com/bernout0/api](https://github.com/bernout0/BookList)](https://github.com/bernout0/BookList.git)https://github.com/bernout0/BookList.git
+   git clone [https://github.com/bernout0/BookList](https://github.com/bernout0/BookList)](https://github.com/bernout0/BookList.git)https://github.com/bernout0/BookList.git
     ```
 
 2. Restore dependencies and build the project:
