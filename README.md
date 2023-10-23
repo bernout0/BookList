@@ -89,6 +89,7 @@ Auth Endpoints:
     POST /api/Auth/register: Register a new user.
     
 Books Endpoints:
+
     GET /api/Books: List all books.
     POST /api/Books: Add a new book.
     GET /api/Books/{id}: Retrieve a specific book.
@@ -96,6 +97,7 @@ Books Endpoints:
     DELETE /api/Books/{id}: Delete a specific book.
     
 Categories Endpoints:
+
     GET /api/Categories: List all categories.
     POST /api/Categories: Add a new category.
     GET /api/Categories/{id}: Retrieve a specific category.
@@ -103,6 +105,7 @@ Categories Endpoints:
     DELETE /api/Categories/{id}: Delete a specific category.
     
 Departments Endpoints:
+
     GET /api/Departments: List all departments.
     POST /api/Departments: Add a new department.
     GET /api/Departments/{id}: Retrieve a specific department.
@@ -110,16 +113,19 @@ Departments Endpoints:
     DELETE /api/Departments/{id}: Delete a specific department.
     
 Reports Endpoints:
+
     GET /api/Reports/total-books: Total number of books report.
     GET /api/Reports/books-per-author: Books count per author report.
     GET /api/Reports/books-per-category: Books count per category report.
     GET /api/Reports/books-per-department: Books count per department report.
     
 UserAccess Endpoints:
+
     POST /api/UserAccess: Grant user access (Department/ Category).
     DELETE /api/UserAccess/{id}: Revoke specific user access.
     
 Users Endpoints:
+
     GET /api/Users: List all users.
 
 
