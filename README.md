@@ -63,12 +63,18 @@ Welcome to Book Listing Project! This repository contains the codebase for a RES
 ### Credentials
 
 For the admin account (For reporting, usermanagement)
+
 username: admin@localhost
+
 password: Password1!
 
+
 Guest account: (Basic authentication)
+
 username: bernie@localhost
+
 password: Password1
+
 
 ### Project Structure
 ![image](https://github.com/bernout0/api/assets/6838398/88ae0234-bf0a-4979-8b65-a03339768375)
