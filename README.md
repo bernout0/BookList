@@ -73,7 +73,7 @@ Guest account: (Basic authentication)
 
 username: bernie@localhost
 
-password: Password1
+password: Password1!
 
 
 ### Project Structure
