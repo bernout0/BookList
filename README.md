@@ -34,6 +34,7 @@ Welcome to Book Listing Project! This repository contains the codebase for a RES
 
 - ASP.NET Core WebAPI - Backend project
 - ASP.Net Blazor - Client Solution
+- Bootstrap 5 - CSS framework
 - Mediatr - For mediatr
 - FluentValidations - For the validations
 - LocalDB
