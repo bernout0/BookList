@@ -138,7 +138,7 @@ Users Endpoints:
 
 ## Relevant Notes
 
-I wasn't able to create a UI for Category and Departments due to time constraint, but it can be accessible via API
+I wasn't able to create a UI for Category and Departments due to time constraint, but it is accessible via API
 
 
 ### Design Considerations
