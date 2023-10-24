@@ -62,7 +62,7 @@ Welcome to Book Listing Project! This repository contains the codebase for a RES
 
 ### Credentials
 
-For the admin account (For reporting, usermanagement)
+For the admin account (For reporting, usermanagement, Categories api and departments api)
 
 username: admin@localhost
 
