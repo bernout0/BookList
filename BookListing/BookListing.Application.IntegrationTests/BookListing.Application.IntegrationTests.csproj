@@ -22,7 +22,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BookListing.WebApi\BookListing.WebApi.csproj" />
-    <ProjectReference Include="..\BookListing\BookListing.Web.csproj" />
   </ItemGroup>
 
 </Project>

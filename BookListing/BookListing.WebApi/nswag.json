@@ -1,5 +1,5 @@
 {
-  "runtime": "Net50",
+  "runtime": "Net60",
   "defaultVariables": null,
   "documentGenerator": {
     "aspNetCoreToOpenApi": {
@@ -53,5 +53,5 @@
       "referencePaths": [],
       "useNuGetCache": false
     }
-  } 
+  }
 }
